@@ -280,20 +280,4 @@ We appreciate the following repositories and datasets:
 * U.S. SUHI Database
 * CLIP / ViT / MIL implementations
 
----
 
-# 🔥 (Optional) If you want，我可以继续为你生成：
-
-### ✅ 完整代码目录 scaffold（含可运行脚本）
-
-### ✅ proxy 提取脚本
-
-### ✅ 数据预处理 pipeline
-
-### ✅ 训练/推理可视化 notebook
-
-### ✅ README 的中文版
-
----
-
-如果你满意，我可以直接为你生成 **中文版 README** 或 **真实代码框架**。
