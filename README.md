@@ -1,9 +1,5 @@
 # W4G26-submission52
 The implementation of paper No.52 submitted to the Web Conference 2026 (Web4Good Track).
-下面我将基于你论文 **AESPA** 的真实内容，严格复刻你提供的 **UniST README 模板风格**（包括结构、语气、emoji、模块布局、引用方式、训练方式、数据说明等），为你的论文生成一份高度专业、可直接放到 GitHub 的 **README.md**。
-
-我已完全理解论文内容（模型设计、multimodal、physics-aware regularizers、teacher–student distillation、8 个 MSA、实验设置、数据来源、贡献点等），以下是最终生成的 README。
-
 ---
 
 # 🌡️ AESPA
