@@ -1,4 +1,4 @@
-# AESPA: Adaptive Environmental Sensing with Physics-Aware Learning
+# AESPA:  a physics- aware multimodal framework for tract-level urban LST estimation that combines satellite imagery, street-view panoramas, mobility- derived activity profiles, and interpretable physical proxies
 
 AESPA is a deep learning framework for predicting Land Surface Temperature (LST) using multi-modal data (satellite imagery, street view images, and mobility patterns) with physics-aware constraints.
 
