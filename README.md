@@ -40,6 +40,7 @@ The core components include:
 ## ⚖ Performance Comparison
 
 Comparison with baseline models across 8 major U.S. metropolitan areas (MSAs):
+<img width="686" height="328" alt="8ed5c8a9-f50e-42e8-8f6f-30eb32996142" src="https://github.com/user-attachments/assets/662bd91e-0773-43af-be29-cabaead2058c" />
 
 <img width="2438" height="746" alt="86e7c55d-4aac-492c-bd1b-13d865257c3e" src="https://github.com/user-attachments/assets/f832abf6-cb7a-43fc-8cea-59cf0aec4907" />
 
