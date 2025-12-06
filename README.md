@@ -1,279 +1,144 @@
-# W4G26-submission52
-The implementation of paper No.52 submitted to the Web Conference 2026 (Web4Good Track).
----
 
-# 🌡️ AESPA
+-----
 
-### **Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data**
+# AESPA
 
-A PyTorch implementation for the paper:
+A pytorch implementation for the paper: **Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data**.
 
-**AESPA: Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data**
-*Anonymous Authors / FIB-LAB style research*
+**Anonymous Author(s)**
 
----
+The repo currently includes code implementations for the following tasks:
 
-## 🚀 What is AESPA?
+  * **Multimodal LST Prediction:** Integrates satellite imagery, street-view panoramas, and mobility profiles for tract-level temperature estimation.
+  * **Physics-Aware Modeling:** Incorporates physical proxies (vegetation, albedo, shadow, etc.) to enforce monotonic consistency and interpretability.
+  * **Cross-City Generalization:** Utilizes a Teacher-Student distillation framework to transfer mobility knowledge to imagery-only models, enabling robust deployment in unseen cities.
+  * **Socioeconomic Analysis:** Capable of revealing intra-urban heat disparities across neighborhoods with different socioeconomic characteristics.
 
-AESPA is a **multimodal**, **physics-aware**, and **teacher–student distillation** framework for **tract-level urban land surface temperature (LST) estimation**.
-It leverages:
+## 🎉 Updates
 
-* 🛰️ **Satellite imagery**
-* 🚗 **Street-view panoramas**
-* 📍 **Human mobility profiles** (privileged during training only)
-* 🌿 **Physically meaningful street-view proxies**
-* 🔥 **Urban-climate priors** (monotonic constraints, day–night ordering)
+  * **📢: News (2025.xx)** The code for **AESPA** is released.
+  * **📢: News (2025.xx)** This paper has been submitted to **Web4Good 2026**.
 
-AESPA achieves **state-of-the-art** performance across 8 major U.S. MSAs and generalizes effectively to unseen cities.
+## Introduction
 
----
+🏆 Extreme urban heat is intensifying worldwide. **AESPA** (Aligned Environmental Sensing with Physics-aware Attribution) is a multimodal framework that combines satellite imagery, street-view panoramas, and mobility-derived activity profiles to estimate fine-grained Land Surface Temperature (LST).
 
-# 🎉 Updates
+By utilizing **Physics-Aware Regularization** and **Knowledge Distillation**, AESPA breaks the "black box" nature of deep learning models, ensuring physical plausibility while enabling deployment in data-poor cities where mobility data may be unavailable.
 
-* **2025.01** — AESPA repo released!
-* **2025.01** — Full teacher–student training pipeline & proxy extraction included
-* **2025.01** — Cross-MSA transfer benchmark released (8 MSAs)
+## Overall Architecture
 
----
+🌟 The training of AESPA consists of two stages: (i) **Mobility-Aware Teacher Training**, which fuses all modalities and learns physical proxies, and (ii) **Imagery-Only Student Distillation**, which learns to mimic the teacher's predictions and feature representations using only visual data.
 
-# 🏆 Highlights
+The core components include:
 
-### 🔧 Multimodal Fusion
+  * **Encoders:** ViT (Satellite), CLIP+MIL (Street View), GRU (Mobility).
+  * **Fusion:** Cross-feature fusion with FiLM-style conditioning.
+  * **Physics Constraints:** Auxiliary heads and loss functions for vegetation, canopy, imperviousness, albedo, and shadow.
 
-AESPA jointly encodes satellite tiles + sets of street-view images + mobility patterns using ViT/CLIP + attention-based MIL.
+## ⚖ Performance Comparison
 
-### 🌿 Physics-Aware Regularization
+Comparison with baseline models across 8 major U.S. metropolitan areas (MSAs):
 
-From street-view pixels, AESPA computes 5 physically interpretable proxies:
+| Model | Modality | Physics-Aware | Mobility-Guided | MAE ($^\circ$C) | Pearson ($\rho$) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **ResNet** | Sat + SV | ✗ | ✗ | 1.95 | 0.61 |
+| **Tile2Vec** | Sat + SV | ✗ | ✗ | High | Low |
+| **UrbanHeat** | Sat Only | ✗ | ✗ | High | Low |
+| **Proxy+Reg** | SV Only | ✗ | ✗ | High | Low |
+| **AESPA (Ours)** | **Sat + SV** | **✓** | **✓ (Distilled)** | **1.33** | **0.76** |
 
-* vegetation
-* tree canopy
-* imperviousness
-* albedo
-* shadow
+## Data
 
-These guide training via:
+We use data from 8 U.S. MSAs (Dallas, Washington, Miami, Boston, Seattle, Minneapolis, St. Louis, Pittsburgh) to demonstrate AESPA.
 
-* sign-constrained physics consistency loss
-* day–night ranking constraint
+  * **Satellite Imagery:** Web-based mapping platforms (Esri).
+  * **Street View:** Google Street View API (panoramas).
+  * **Mobility:** SafeGraph Weekly Patterns.
+  * **Labels:** US Surface Urban Heat Island database (Summer Daytime LST).
 
-### 👨‍🏫 Teacher–Student Distillation
+Please refer to `data/readme.md` for preprocessing scripts.
 
-Mobility is *privileged* and **used only in the teacher**.
-The *student* uses only satellite + street-view for **real-world deployment in data-poor cities**.
-
-### 📈 Strong Performance
-
-Across 8 MSAs, AESPA:
-
-* **↓32% MAE reduction** vs best satellite baseline
-* **↑0.15 correlation improvement**
-* **+0.05–0.10 gain** in cross-MSA transfer
-
----
-
-# 📌 Overall Architecture
-
-AESPA training consists of **two stages**:
-
-### **Stage-1: Train mobility-aware teacher**
-
-* multi-view satellite + street-view
-* 168-dim weekly mobility profile
-* physics-aware losses
-
-### **Stage-2: Train imagery-only student**
-
-* distill teacher predictions + fused features
-* maintain physics awareness
-* deploy only satellite + street view
-
----
-
-# 📁 Dataset Overview
-
-AESPA uses fully open, web-based data sources:
-
-### **Urban Imagery**
-
-* **Satellite tiles** (Esri World Imagery, 256×256 RGB)
-* **Up to 40 street-view panoramas per tract**
-
-  * Collected via Google Street View API
-
-### **Human Mobility**
-
-* SafeGraph Weekly Patterns
-* Aggregated hourly POI visits → **168-d mobility profile**
-
-### **Target Variable: Land Surface Temperature**
-
-* Summer daytime LST from **U.S. Surface Urban Heat Island Database (SUHI)**
-
-### **Socioeconomic Attributes for Case Studies**
-
-* 2019 ACS 5-year tracts (race, poverty)
-
-### **Cities Covered (8 MSAs)**
-
-| MSA         | Avg LST (°C) | # Tracts |
-| ----------- | ------------ | -------- |
-| Dallas      | 40.7         | 1,312    |
-| Washington  | 33.6         | 1,359    |
-| Miami       | 37.7         | 1,216    |
-| Boston      | 31.5         | 1,003    |
-| Seattle     | 31.8         | 718      |
-| Minneapolis | 31.3         | 785      |
-| St. Louis   | 34.9         | 615      |
-| Pittsburgh  | 30.5         | 711      |
-
----
-
-# ⚙️ Installation
+## ⚙️ Installation
 
 ### Environment
 
-* Linux
-* Python ≥ 3.9
-* PyTorch ≥ 2.0
-* CUDA 11.x
-* pip install -r requirements.txt
+  * Tested OS: Linux
+  * Python \>= 3.9
+  * torch \>= 2.0.0
+  * Tensorboard
 
----
+### Dependencies:
 
-# 🏃 Training
+1.  Install Pytorch with the correct CUDA version.
+2.  Use the `pip install -r requirements.txt` command to install all of the Python modules and packages used in this project.
 
-## 1. Prepare experiment directory
+## 🏃 Model Training
+
+Please first navigate to the `src` directory: `cd src`
+Then create a folder named `experiments` to record the training process: `mkdir experiments`
+
+### Stage-1: Teacher Model Training (with Mobility)
+
+We provide the scripts under the folder `./scripts/train_teacher.sh`. You can train the teacher model which uses Satellite, Street View, and Mobility data:
 
 ```bash
-cd src
-mkdir experiments
+python main.py --device_id 0 --mode teacher \
+  --dataset Dallas*Boston*Miami \
+  --lambda_phys 0.05 --lambda_proxy 0.0 --lambda_rank 0.1 \
+  --lr 1e-4 --weight_decay 0.05 \
+  --batch_size 32
 ```
 
-## 2. Stage-1: Train mobility-aware teacher
+Once your model is trained, you will find the logs in `./logs/`. The trained teacher model will be saved in `./experiments/Teacher_<dataset>/model_save/model_best.pkl`.
 
-Example:
+### Stage-2: Student Model Distillation (Imagery Only)
+
+We provide the scripts under the folder `./scripts/distill_student.sh`. The student model learns from the frozen teacher and only uses Satellite and Street View inputs:
 
 ```bash
-python main.py \
-  --device_id 0 \
-  --dataset Dallas \
-  --task LST \
-  --use_mobility 1 \
-  --use_proxy_loss 1 \
-  --use_physics 1 \
+python main.py --device_id 0 --mode student \
+  --dataset Dallas*Boston*Miami \
+  --teacher_path ./experiments/Teacher_<dataset>/model_save/model_best.pkl \
+  --lambda_phys 0.2 --lambda_proxy 0.3 --lambda_rank 0.1 \
+  --lambda_kd 0.1 --lambda_fd 0.05 \
   --lr 1e-4
 ```
 
-Outputs:
+**Parameters to specify:**
 
-* logs: `logs/Teacher_<MSA>/`
-* weights: `experiments/Teacher_<MSA>/model_best.pkl`
+  * `teacher_path`: Path to the pre-trained teacher model.
+  * `lambda_phys`: Weight for physics consistency loss (sign-constrained correlation).
+  * `lambda_proxy`: Weight for proxy reconstruction loss.
+  * `lambda_rank`: Weight for day-night ranking loss.
+  * `lambda_kd` & `lambda_fd`: Weights for Knowledge Distillation (prediction) and Feature Distillation.
 
----
+## Model Weights
 
-## 3. Stage-2: Train imagery-only student (distillation)
+We provide downloads of model weights on [Link Coming Soon].
 
-```bash
-python main.py \
-  --device_id 0 \
-  --dataset Dallas \
-  --task LST \
-  --use_mobility 0 \
-  --distill_from teacher_path.pkl \
-  --use_proxy_loss 1 \
-  --use_physics 1 \
-  --lr 1e-4
-```
+## 👀 Citation
 
-Outputs:
+If you find this repo helpful, please cite our paper:
 
-* logs: `logs/Student_<MSA>/`
-* weights: `experiments/Student_<MSA>/model_best.pkl`
-
----
-
-# 📊 Benchmark Results
-
-AESPA achieves:
-
-### **Within-MSA**
-
-* **MAE 1.33°C** (best baseline: 1.95°C)
-* **Correlation 0.76** (baseline: 0.61)
-
-### **Cross-MSA Transfer**
-
-* **+0.05–0.10** correlation over imagery-only baselines
-
-### **Ablation Highlights**
-
-Removing components hurts:
-
-| Component Removed | Effect                      |
-| ----------------- | --------------------------- |
-| w/o Satellite     | MAE ↑ 6–10%                 |
-| w/o Street View   | MAE ↑ 6–10%                 |
-| w/o Physics       | MAE ↑ 2–6%                  |
-| w/o Proxies       | correlation ↓ significantly |
-| w/o Distillation  | correlation ↓ up to 0.15    |
-
----
-
-# 📈 Socioeconomic Analysis (Dallas Case Study)
-
-AESPA reproduces ground-truth racial & poverty heat gradients:
-
-* Hotter tracts for **lower White share**
-* Hotter tracts for **higher Hispanic or poverty share**
-
-AESPA matches slope + structure much better than ResNet.
-
----
-
-# 📂 Code Structure
-
-```
-src/
-  ├── models/
-  │     ├── satellite_encoder.py
-  │     ├── streetview_encoder.py
-  │     ├── mobility_encoder.py
-  │     ├── fusion.py
-  │     ├── proxies.py
-  │     └── aespa_teacher_student.py
-  ├── data/
-  │     ├── esri_satellite_loader.py
-  │     ├── gsv_loader.py
-  │     ├── mobility_loader.py
-  │     └── proxy_extractor.py
-  ├── main.py
-  └── utils/
-```
-
----
-
-# 📜 Citation
-
-```
-@article{AESPA2025,
+```bibtex
+@inproceedings{anonymous2026aespa,
   title={Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data},
-  author={Anonymous},
-  journal={Web4Good (Submission 52)},
-  year={2025}
+  author={Anonymous Author(s)},
+  booktitle={Web4Good 2026 Submission},
+  year={2026}
 }
 ```
 
----
+## 🙇‍ Acknowledgement
 
-# 🙇 Acknowledgement
+We appreciate the following resources:
 
-We appreciate the following repositories and datasets:
+  * **SafeGraph:** For providing human mobility data.
+  * **US Surface Urban Heat Island Database:** For ground truth LST data.
+  * **CLIP & ViT:** For the visual backbone implementations.
 
-* Esri World Imagery
-* Google Street View API
-* SafeGraph Weekly Patterns
-* U.S. SUHI Database
-* CLIP / ViT / MIL implementations
+## 📧 Contact
 
+If you have any questions or want to use the code, feel free to contact:
 
+[Your Name/Email Placeholder]
