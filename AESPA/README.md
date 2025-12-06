@@ -218,4 +218,3 @@ We appreciate the following resources:
 
 If you have any questions or want to use the code, feel free to contact:
 
-[yyy25@mails.tsinghua.edu.cn]
