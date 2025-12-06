@@ -1,0 +1,93 @@
+# Student Model Configuration
+# Stage 2: Distill Student Model from Teacher (imagery-only)
+
+model:
+  name: "student"
+  hidden_dim: 512
+  num_cross_attn_layers: 2
+  film_dim: 128
+  num_outputs: 1  # Predict day temperature (main task)
+  use_night_aux: true  # Use night temperature as auxiliary output for ranking constraint
+
+# Street View Encoder
+street_view:
+  encoder: "clip_vit_b16"
+  input_size: 224
+  num_images: 16  # K=16 images per tract
+  use_lora: true
+  lora_r: 8
+  lora_alpha: 16
+  lora_dropout: 0.1
+  freeze_backbone: true
+  mil_type: "gated_attention"
+  mil_hidden: 256
+  clip_local_dir: "${CLIP_MODEL_DIR:-./models/clip-vit-base-patch16}"  # Set CLIP_MODEL_DIR env var or use default
+
+# Satellite Encoder
+satellite:
+  encoder: "satmae_b"  # or "vit_base"
+  input_size: 256
+  use_adapter: true
+  adapter_bottleneck: 64
+  freeze_backbone: true
+  vit_local_dir: "${VIT_MODEL_DIR:-./models/vit-base-patch16-224}"  # Set VIT_MODEL_DIR env var or use default
+
+# Mobility Encoder (Student does not use mobility)
+mobility:
+  enabled: false
+
+# Concept Bottleneck
+concept_bottleneck:
+  enabled: true
+  concepts: ["ndvi_proxy", "tree_canopy_proxy", "impervious_proxy", "albedo_proxy", "shadow_fraction"]
+  hidden_dim: 256
+
+# Fusion module
+fusion:
+  num_cities: 8
+  token_dim: 6  # 1 (city) + 5 (proxies), no mobility
+
+# Training
+training:
+  batch_size: 4  # Reduced for student training (teacher+student models loaded simultaneously)
+  epochs: 30
+  learning_rate: 1e-4  # Reduced learning rate for more stable training
+  weight_decay: 0.05
+  optimizer: "adamw"
+  
+  # Loss weights (can be overridden by command line arguments)
+  loss_weights:
+    l1: 1.0
+    kd: 0.1  # Knowledge distillation (reduced to prevent overfitting to teacher)
+    fd: 0.05  # Feature distillation (reduced, already normalized by feature dim)
+    physics: 0.2
+    spatial: 0.0  # Can be 0.1 or 0.2
+    concept: 0.3
+    ranking: 0.1  # Ranking loss for night < day constraint
+  
+  # Data augmentation
+  augmentation:
+    rand_augment: true
+    color_jitter: 0.1
+    random_crop: true
+
+# Data configuration
+data:
+  data_dir: "${DATA_DIR:-./data}"  # Set DATA_DIR env var or use default relative path
+  num_workers: 4
+  pin_memory: true
+  normalize_lst: true
+  num_images: 16
+  temperature_csv: null  # Optional: path to temperature CSV (can be set via command line)
+
+# Evaluation
+eval:
+  metrics: ["rmse", "mae", "r2", "pearson"]
+  split: "test"
+
+# Distillation configuration
+distillation:
+  temperature: 2.0
+  alpha_kd: 0.1
+  alpha_fd: 0.05
+

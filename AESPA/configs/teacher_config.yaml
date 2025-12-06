@@ -1,0 +1,94 @@
+# Teacher Model Configuration
+# Stage 1: Train Teacher Model with full modalities (satellite, street view, mobility)
+
+model:
+  name: "teacher"
+  hidden_dim: 512
+  num_cross_attn_layers: 2
+  film_dim: 128
+  use_mobility: true  # Teacher uses mobility
+  num_outputs: 1  # Predict day temperature (main task)
+  use_night_aux: true  # Use night temperature as auxiliary output for ranking constraint
+
+# Street View Encoder
+street_view:
+  encoder: "clip_vit_b16"
+  clip_local_dir: "${CLIP_MODEL_DIR:-./models/clip-vit-base-patch16}"  # Set CLIP_MODEL_DIR env var or use default
+  input_size: 224
+  num_images: 16  # K=16 images per tract
+  hidden_dim: 512
+  freeze_backbone: true
+  use_lora: true
+  lora_r: 8
+  lora_alpha: 16
+  lora_dropout: 0.1
+  mil_type: "gated_attention"
+  mil_hidden: 256
+
+# Satellite Encoder
+satellite:
+  encoder: "satmae_b"  # or "vit_base"
+  input_size: 256
+  use_adapter: true
+  adapter_bottleneck: 64
+  freeze_backbone: true
+  vit_local_dir: "${VIT_MODEL_DIR:-./models/vit-base-patch16-224}"  # Set VIT_MODEL_DIR env var or use default
+
+# Mobility Encoder (Teacher only)
+mobility:
+  enabled: true
+  input_dim: 168  # 168 hours per week
+  num_features: 3  # visit/outbound/stay
+  encoder_type: "gru"  # Options: "gru", "mlp", "tcn"
+  hidden_dim: 128
+  output_dim: 128
+  num_layers: 2
+  dropout: 0.1
+
+# Concept Bottleneck
+concept_bottleneck:
+  enabled: true
+  concepts: ["ndvi_proxy", "tree_canopy_proxy", "impervious_proxy", "albedo_proxy", "shadow_fraction"]
+  hidden_dim: 256
+
+# Fusion module
+fusion:
+  num_cities: 8  # Number of MSAs
+  token_dim: 13  # 1 (city) + 5 (proxies) + 1 (mobility) + others
+
+# Training
+training:
+  batch_size: 16
+  epochs: 30
+  learning_rate: 2e-4
+  weight_decay: 0.1
+  optimizer: "adamw"
+  
+  # Loss weights (can be overridden by command line arguments)
+  loss_weights:
+    l1: 1.0
+    physics: 0.05  # Reduced to prevent interference with main learning objective
+    spatial: 0.0
+    concept: 0.0  # Disabled initially to focus on main task
+    ranking: 0.1  # Ranking loss for night < day constraint
+  
+  # Data augmentation
+  augmentation:
+    rand_augment: true
+    color_jitter: 0.1
+    random_crop: true
+
+# Data configuration
+data:
+  data_dir: "${DATA_DIR:-./data}"  # Set DATA_DIR env var or use default relative path
+  num_workers: 4
+  pin_memory: true
+  normalize_lst: true
+  num_images: 16
+  temperature_csv: null  # Optional: path to temperature CSV (can be set via command line)
+
+# Evaluation
+eval:
+  metrics: ["rmse", "mae", "r2", "pearson"]
+  split: "test"
+
