@@ -41,13 +41,8 @@ The core components include:
 
 Comparison with baseline models across 8 major U.S. metropolitan areas (MSAs):
 
-| Model | Modality | Physics-Aware | Mobility-Guided | MAE ($^\circ$C) | Pearson ($\rho$) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **ResNet** | Sat + SV | ✗ | ✗ | 1.95 | 0.61 |
-| **Tile2Vec** | Sat + SV | ✗ | ✗ | High | Low |
-| **UrbanHeat** | Sat Only | ✗ | ✗ | High | Low |
-| **Proxy+Reg** | SV Only | ✗ | ✗ | High | Low |
-| **AESPA (Ours)** | **Sat + SV** | **✓** | **✓ (Distilled)** | **1.33** | **0.76** |
+<img width="2438" height="746" alt="86e7c55d-4aac-492c-bd1b-13d865257c3e" src="https://github.com/user-attachments/assets/b4f152d3-8314-472e-99b0-6bde7b140c53" />
+
 
 ## Data
 
