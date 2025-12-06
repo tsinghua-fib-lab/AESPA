@@ -1,9 +1,8 @@
 
------
 
 # AESPA
 
-A pytorch implementation for the paper: **Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data**.
+A PyTorch implementation for the paper: **Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data**.
 
 **Anonymous Author(s)**
 
@@ -16,16 +15,16 @@ The repo currently includes code implementations for the following tasks:
 
 ## 🎉 Updates
 
-  * **📢: News (2025.)** The code for **AESPA** is released.
-  * **📢: News (2025.)** This paper has been submitted to **Web4Good 2026**.
+  * **📢: News (2025.xx)** The code for **AESPA** is released.
+  * **📢: News (2025.xx)** This paper has been submitted to **Web4Good 2026**.
 
 ## Introduction
 
 🏆 Extreme urban heat is intensifying worldwide. **AESPA** (Aligned Environmental Sensing with Physics-aware Attribution) is a multimodal framework that combines satellite imagery, street-view panoramas, and mobility-derived activity profiles to estimate fine-grained Land Surface Temperature (LST).
 
 By utilizing **Physics-Aware Regularization** and **Knowledge Distillation**, AESPA breaks the "black box" nature of deep learning models, ensuring physical plausibility while enabling deployment in data-poor cities where mobility data may be unavailable.
-<img width="2424" height="1136" alt="71637a63-ef40-4c29-a811-2e29ef074681" src="https://github.com/user-attachments/assets/689402bb-7fe7-4a8c-b42c-3d1cb608346e" />
 
+\<img width="100%" alt="AESPA Framework Overview" src="[https://github.com/user-attachments/assets/689402bb-7fe7-4a8c-b42c-3d1cb608346e](https://github.com/user-attachments/assets/689402bb-7fe7-4a8c-b42c-3d1cb608346e)" /\>
 
 ## Overall Architecture
 
@@ -41,8 +40,7 @@ The core components include:
 
 Comparison with baseline models across 8 major U.S. metropolitan areas (MSAs):
 
-<img width="2438" height="746" alt="86e7c55d-4aac-492c-bd1b-13d865257c3e" src="https://github.com/user-attachments/assets/b4f152d3-8314-472e-99b0-6bde7b140c53" />
-
+\<img width="100%" alt="Performance Comparison Table" src="[https://github.com/user-attachments/assets/b4f152d3-8314-472e-99b0-6bde7b140c53](https://github.com/user-attachments/assets/b4f152d3-8314-472e-99b0-6bde7b140c53)" /\>
 
 ## Data
 
@@ -53,7 +51,7 @@ We use data from 8 U.S. MSAs (Dallas, Washington, Miami, Boston, Seattle, Minnea
   * **Mobility:** SafeGraph Weekly Patterns.
   * **Labels:** US Surface Urban Heat Island database (Summer Daytime LST).
 
-Please refer to `data/readme.md` for preprocessing scripts.
+Please refer to `data/readme.md` for preprocessing scripts and data structure details.
 
 ## ⚙️ Installation
 
@@ -61,53 +59,132 @@ Please refer to `data/readme.md` for preprocessing scripts.
 
   * Tested OS: Linux
   * Python \>= 3.9
-  * torch \>= 2.0.0
-  * Tensorboard
+  * PyTorch \>= 2.0.0
+  * CUDA (recommended for GPU training)
 
-### Dependencies:
+### Dependencies
 
-1.  Install Pytorch with the correct CUDA version.
-2.  Use the `pip install -r requirements.txt` command to install all of the Python modules and packages used in this project.
+1.  Install PyTorch with the correct CUDA version from the [PyTorch official website](https://pytorch.org/).
+
+2.  Install all Python dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+    The main dependencies include:
+
+      * `torch>=2.0.0`
+      * `transformers>=4.30.0` (for CLIP and ViT models)
+      * `peft>=0.4.0` (for LoRA fine-tuning)
+      * `tensorboard>=2.13.0` (for training visualization)
+
+### Configuration
+
+Before training, set up the following environment variables or update the config files:
+
+```bash
+# Model paths (download CLIP and ViT models first)
+export CLIP_MODEL_DIR="/path/to/clip-vit-base-patch16"
+export VIT_MODEL_DIR="/path/to/vit-base-patch16-224"
+
+# Data directory
+export DATA_DIR="/path/to/your/data"
+```
+
+Alternatively, you can directly edit the paths in `configs/teacher_config.yaml` and `configs/student_config.yaml`.
 
 ## 🏃 Model Training
 
-Please first navigate to the `src` directory: `cd src`
-Then create a folder named `experiments` to record the training process: `mkdir experiments`
+Please first navigate to the root directory of the project.
+
+### Data Preparation
+
+1.  Organize your data according to `data/readme.md`.
+2.  Preprocess physical proxy indicators (Vegetation, Albedo, etc.) from street view imagery:
+
+<!-- end list -->
+
+```bash
+# Set DATA_DIR environment variable or use relative path
+export DATA_DIR="/path/to/your/data"
+
+python data/preprocess_proxies.py --data-dir "${DATA_DIR:-./data}" --split train
+python data/preprocess_proxies.py --data-dir "${DATA_DIR:-./data}" --split val
+python data/preprocess_proxies.py --data-dir "${DATA_DIR:-./data}" --split test
+```
 
 ### Stage-1: Teacher Model Training (with Mobility)
 
-We provide the scripts under the folder `./scripts/train_teacher.sh`. You can train the teacher model which uses Satellite, Street View, and Mobility data:
+We provide the training script `scripts/train_teacher.sh`. You can train the teacher model which uses **Satellite**, **Street View**, and **Mobility** data:
 
 ```bash
-python main.py --device_id 0 --mode teacher \
-  --dataset Dallas*Boston*Miami \
-  --lambda_phys 0.05 --lambda_proxy 0.0 --lambda_rank 0.1 \
-  --lr 1e-4 --weight_decay 0.05 \
-  --batch_size 32
+bash scripts/train_teacher.sh
 ```
 
-Once your model is trained, you will find the logs in `./logs/`. The trained teacher model will be saved in `./experiments/Teacher_<dataset>/model_save/model_best.pkl`.
+Or run directly with Python:
+
+```bash
+python src/main.py \
+    --mode teacher \
+    --config configs/teacher_config.yaml \
+    --data-dir /path/to/data \
+    --checkpoint-dir checkpoints/teacher \
+    --log-dir logs/teacher \
+    --device cuda:0 \
+    --epochs 30 \
+    --batch-size 16 \
+    --lambda-phys 0.05 \
+    --lambda-proxy 0.0 \
+    --lambda-ranking 0.1
+```
+
+**Parameters:**
+
+  * `--mode`: Training mode (`teacher` or `student`).
+  * `--config`: Path to YAML configuration file.
+  * `--data-dir`: Path to data directory.
+  * `--checkpoint-dir`: Directory to save model checkpoints.
+  * `--log-dir`: Directory for TensorBoard logs.
+  * `--lambda-phys`: Weight for physics consistency loss (default: 0.05).
+  * `--lambda-ranking`: Weight for day-night ranking loss (default: 0.1).
+
+Once trained, you will find logs in `logs/teacher/` and the best model in `checkpoints/teacher/best.pth`.
 
 ### Stage-2: Student Model Distillation (Imagery Only)
 
-We provide the scripts under the folder `./scripts/distill_student.sh`. The student model learns from the frozen teacher and only uses Satellite and Street View inputs:
+We provide the distillation script `scripts/distill_student.sh`. The student model learns from the frozen teacher and only uses **Satellite** and **Street View** inputs (no mobility data needed for inference):
 
 ```bash
-python main.py --device_id 0 --mode student \
-  --dataset Dallas*Boston*Miami \
-  --teacher_path ./experiments/Teacher_<dataset>/model_save/model_best.pkl \
-  --lambda_phys 0.2 --lambda_proxy 0.3 --lambda_rank 0.1 \
-  --lambda_kd 0.1 --lambda_fd 0.05 \
-  --lr 1e-4
+bash scripts/distill_student.sh
 ```
 
-**Parameters to specify:**
+Or run directly with Python:
 
-  * `teacher_path`: Path to the pre-trained teacher model.
-  * `lambda_phys`: Weight for physics consistency loss (sign-constrained correlation).
-  * `lambda_proxy`: Weight for proxy reconstruction loss.
-  * `lambda_rank`: Weight for day-night ranking loss.
-  * `lambda_kd` & `lambda_fd`: Weights for Knowledge Distillation (prediction) and Feature Distillation.
+```bash
+python src/main.py \
+    --mode student \
+    --config configs/student_config.yaml \
+    --data-dir /path/to/data \
+    --teacher-checkpoint checkpoints/teacher/best.pth \
+    --checkpoint-dir checkpoints/student \
+    --log-dir logs/student \
+    --device cuda:0 \
+    --epochs 30 \
+    --batch-size 4 \
+    --lambda-kd 0.1 \
+    --lambda-fd 0.05 \
+    --lambda-phys 0.2 \
+    --lambda-proxy 0.3 \
+    --lambda-ranking 0.1
+```
+
+**Additional Parameters for Student:**
+
+  * `--teacher-checkpoint`: Path to the pre-trained teacher model checkpoint.
+  * `--lambda-kd`: Weight for Knowledge Distillation loss (logits matching).
+  * `--lambda-fd`: Weight for Feature Distillation loss (feature matching).
+  * **Note:** Student training uses a smaller batch size (e.g., 4) because both teacher and student models are loaded into VRAM simultaneously.
 
 ## Model Weights
 
