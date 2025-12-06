@@ -16,14 +16,16 @@ The repo currently includes code implementations for the following tasks:
 
 ## 🎉 Updates
 
-  * **📢: News (2025.xx)** The code for **AESPA** is released.
-  * **📢: News (2025.xx)** This paper has been submitted to **Web4Good 2026**.
+  * **📢: News (2025.)** The code for **AESPA** is released.
+  * **📢: News (2025.)** This paper has been submitted to **Web4Good 2026**.
 
 ## Introduction
 
 🏆 Extreme urban heat is intensifying worldwide. **AESPA** (Aligned Environmental Sensing with Physics-aware Attribution) is a multimodal framework that combines satellite imagery, street-view panoramas, and mobility-derived activity profiles to estimate fine-grained Land Surface Temperature (LST).
 
 By utilizing **Physics-Aware Regularization** and **Knowledge Distillation**, AESPA breaks the "black box" nature of deep learning models, ensuring physical plausibility while enabling deployment in data-poor cities where mobility data may be unavailable.
+<img width="2424" height="1136" alt="71637a63-ef40-4c29-a811-2e29ef074681" src="https://github.com/user-attachments/assets/689402bb-7fe7-4a8c-b42c-3d1cb608346e" />
+
 
 ## Overall Architecture
 
