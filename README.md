@@ -15,8 +15,8 @@ The repo currently includes code implementations for the following tasks:
 
 ## 🎉 Updates
 
-  * **📢: News (2025.xx)** The code for **AESPA** is released.
-  * **📢: News (2025.xx)** This paper has been submitted to **Web4Good 2026**.
+  * **📢: News (2025.)** The code for **AESPA** is released.
+  * **📢: News (2025.)** This paper has been submitted to **Web4Good 2026**.
 
 ## Introduction
 
@@ -24,7 +24,8 @@ The repo currently includes code implementations for the following tasks:
 
 By utilizing **Physics-Aware Regularization** and **Knowledge Distillation**, AESPA breaks the "black box" nature of deep learning models, ensuring physical plausibility while enabling deployment in data-poor cities where mobility data may be unavailable.
 
-\<img width="100%" alt="AESPA Framework Overview" src="[https://github.com/user-attachments/assets/689402bb-7fe7-4a8c-b42c-3d1cb608346e](https://github.com/user-attachments/assets/689402bb-7fe7-4a8c-b42c-3d1cb608346e)" /\>
+<img width="1010" height="484" alt="485f0da1-64d2-4479-86b8-16af21666aa4" src="https://github.com/user-attachments/assets/523c0fdd-3ab3-4d3f-b7b5-f4ab8bfd5842" />
+
 
 ## Overall Architecture
 
@@ -40,7 +41,8 @@ The core components include:
 
 Comparison with baseline models across 8 major U.S. metropolitan areas (MSAs):
 
-\<img width="100%" alt="Performance Comparison Table" src="[https://github.com/user-attachments/assets/b4f152d3-8314-472e-99b0-6bde7b140c53](https://github.com/user-attachments/assets/b4f152d3-8314-472e-99b0-6bde7b140c53)" /\>
+<img width="2438" height="746" alt="86e7c55d-4aac-492c-bd1b-13d865257c3e" src="https://github.com/user-attachments/assets/f832abf6-cb7a-43fc-8cea-59cf0aec4907" />
+
 
 ## Data
 
@@ -215,4 +217,4 @@ We appreciate the following resources:
 
 If you have any questions or want to use the code, feel free to contact:
 
-[Your Name/Email Placeholder]
+[yyy25@mails.tsinghua.edu.cn]
