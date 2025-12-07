@@ -214,8 +214,8 @@ We appreciate the following resources:
   * **US Surface Urban Heat Island Database:** For ground truth LST data.
   * **CLIP & ViT:** For the visual backbone implementations.
 
+<!--
 ## 📧 Contact
-
 If you have any questions or want to use the code, feel free to contact:
-
 [yyy25@mails.tsinghua.edu.cn]
+-->
