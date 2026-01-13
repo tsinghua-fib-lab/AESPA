@@ -15,8 +15,8 @@ The repo currently includes code implementations for the following tasks:
 
 ## 🎉 Updates
 
-  * **📢: News (2025.)** The code for **AESPA** is released.
-  * **📢: News (2025.)** This paper has been submitted to **Web4Good 2026**.
+  * **📢: News (2025.12)** The code for **AESPA** is released.
+  * **📢: News (2025.12)** This paper has been submitted to **Web4Good 2026**.
 
 ## Introduction
 
