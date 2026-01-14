@@ -197,7 +197,7 @@ We provide downloads of model weights on [Link Coming Soon].
 If you find this repo helpful, please cite our paper:
 
 ```bibtex
-@inproceedings{you2025perceiving,
+@inproceedings{you2026physics,
   title={Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data},
   author={You, Yuanyi and Zhang, Yunke and Li, Yong},
   booktitle={Proceedings of the ACM on Web Conference 2026},
