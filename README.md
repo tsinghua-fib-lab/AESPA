@@ -2,9 +2,7 @@
 
 # AESPA
 
-A PyTorch implementation for the paper: **Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data**.
-
-**Anonymous Author(s)**
+A PyTorch implementation for our paper published on The Web Conference 2026: **Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data**.
 
 The repo currently includes code implementations for the following tasks:
 
@@ -15,6 +13,7 @@ The repo currently includes code implementations for the following tasks:
 
 ## 🎉 Updates
 
+  * **📢: News (2026.01)** Our paper is accepted by **Web4Good 2026**!!!
   * **📢: News (2025.12)** The code for **AESPA** is released.
   * **📢: News (2025.12)** This paper has been submitted to **Web4Good 2026**.
 
@@ -198,10 +197,10 @@ We provide downloads of model weights on [Link Coming Soon].
 If you find this repo helpful, please cite our paper:
 
 ```bibtex
-@inproceedings{anonymous2026aespa,
+@inproceedings{you2025perceiving,
   title={Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data},
-  author={Anonymous Author(s)},
-  booktitle={Web4Good 2026 Submission},
+  author={You, Yuanyi and Zhang, Yunke and Li, Yong},
+  booktitle={Proceedings of the ACM on Web Conference 2026},
   year={2026}
 }
 ```
