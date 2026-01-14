@@ -1,27 +1,21 @@
+# Physics-Aware Multimodal Urban Heat Mapping (AESPA)
 
+OFFICIAL implementation of the paper **"Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data"**, accepted to the **Web4Good Track** at **The Web Conference 2026**.
 
-# AESPA
+**AESPA** (**A**ligned **E**nvironmental **S**ensing with **P**hysics-aware **A**ttribution) is a framework for fine-grained urban Land Surface Temperature (LST) estimation. It fuses satellite imagery, street-view panoramas, and mobility data while enforcing physical consistency constraints.
 
-A PyTorch implementation for our paper published on The Web Conference 2026: **Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data**.
+## 📢 News
 
-The repo currently includes code implementations for the following tasks:
-
-  * **Multimodal LST Prediction:** Integrates satellite imagery, street-view panoramas, and mobility profiles for tract-level temperature estimation.
-  * **Physics-Aware Modeling:** Incorporates physical proxies (vegetation, albedo, shadow, etc.) to enforce monotonic consistency and interpretability.
-  * **Cross-City Generalization:** Utilizes a Teacher-Student distillation framework to transfer mobility knowledge to imagery-only models, enabling robust deployment in unseen cities.
-  * **Socioeconomic Analysis:** Capable of revealing intra-urban heat disparities across neighborhoods with different socioeconomic characteristics.
-
-## 🎉 Updates
-
-  * **📢: News (2026.01)** Our paper is accepted by **Web4Good 2026**!!!
-  * **📢: News (2025.12)** The code for **AESPA** is released.
-  * **📢: News (2025.12)** This paper has been submitted to **Web4Good 2026**.
+ * **[2026.01]** 🎉 Accepted to **The Web Conference 2026 (Web4Good Track)**!
+ * **[2025.12]** 🚀 Code released.
+ * **[2025.12]** 📝 Paper submitted to Web4Good 2026.
 
 ## Introduction
 
-🏆 Extreme urban heat is intensifying worldwide. **AESPA** (Aligned Environmental Sensing with Physics-aware Attribution) is a multimodal framework that combines satellite imagery, street-view panoramas, and mobility-derived activity profiles to estimate fine-grained Land Surface Temperature (LST).
-
-By utilizing **Physics-Aware Regularization** and **Knowledge Distillation**, AESPA breaks the "black box" nature of deep learning models, ensuring physical plausibility while enabling deployment in data-poor cities where mobility data may be unavailable.
+Extreme urban heat is a growing crisis, but monitoring it at the neighborhood level is challenging due to the limitations of satellite revisit cycles and resolutions. **AESPA** addresses this by:
+1.  **Multimodal Fusion:** Combining **Satellite** (macro-view), **Street View** (micro-view/facades), and **Mobility** (human activity) data.
+2.  **Physics-Aware Regularization:** Deriving physical proxies (vegetation, albedo, shadow) from street views to enforce monotonic consistency (e.g., *more vegetation should not increase predicted temperature*).
+3.  **Teacher-Student Distillation:** Training a "Mobility-Aware Teacher" and distilling its knowledge into an "Imagery-Only Student," enabling deployment in cities where mobility data is unavailable.
 
 <img width="1010" height="484" alt="485f0da1-64d2-4479-86b8-16af21666aa4" src="https://github.com/user-attachments/assets/523c0fdd-3ab3-4d3f-b7b5-f4ab8bfd5842" />
 
