@@ -61,4 +61,14 @@ python data/preprocess_proxies.py --data-dir /path/to/data --split test
 ```
 
 This will generate the `concepts/` directory with physical proxy indicators computed from street view images.
+## Data Download
+
+The full dataset is publicly available on Zenodo:
+
+**Zenodo Record**: https://zenodo.org/records/19160053
+
+### Usage
+1. Download the dataset from the link above.
+2. Unzip the files.
+3. Place all data into the `data/` directory of this project, following the structure described below.
 
