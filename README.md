@@ -1,6 +1,6 @@
 # Physics-Aware Multimodal Urban Heat Mapping (AESPA)
 
-OFFICIAL implementation of the paper **"Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data"**, published at the **Web4Good Track** at **The Web Conference 2026**.
+OFFICIAL implementation of [the paper](https://dl.acm.org/doi/10.1145/3774904.3793035) **"Physics-Aware Multimodal Urban Heat Mapping with Open Web Imagery and Mobility Data"**, published at the **Web4Good Track** at **The Web Conference 2026**.
 
 **AESPA** (**A**ligned **E**nvironmental **S**ensing with **P**hysics-aware **A**ttribution) is a framework for fine-grained urban Land Surface Temperature (LST) estimation. It fuses satellite imagery, street-view panoramas, and mobility data while enforcing physical consistency constraints.
 
